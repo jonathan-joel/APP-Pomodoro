@@ -1,16 +1,24 @@
-import { StyleSheet,Platform, Text, View, Button, SafeAreaView, TouchableHighlight, TouchableOpacity } from 'react-native';
-import {useState} from "react";
-import Header from './src/components/Header';
-import { audio } from "expo-av";
+import { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+} from "react-native";
+import Header from "./src/components/Header";
+import Timer from "./src/components/Timer";
+import { Audio } from "expo-av";
 
 const colors = ["#F7DC6F", "#A2D9CE", "#D7BDE2"];
 
 export default function App() {
-  const [isWorking, setIsworking]= useState(false);
-  const [time, setTime]= useState(25 * 60);
-  const [currentTime, setCurrentTime]= useState("POMO" | "SHORT" | "BREAK");
+  const [isWorking, setIsWorking] = useState(true);
+  const [time, setTime] = useState(60 * 25); // 25 minutes in seconds
   const [isActive, setIsActive] = useState(false);
-}
+  const [currentTime, setCurrentTime] = useState("POMO" | "SHORT" | "BREAK");
+
   useEffect(() => {
     let interval = null;
 
@@ -31,39 +39,43 @@ export default function App() {
     return () => clearInterval(interval);
   }, [isActive, time]);
 
-  function handleStartStop() {
-    playsound();
-    setIsActive(!isActive);
-    
+  const handleStartStop = () => {
+    playSound();
+    setIsActive((prev) => !prev);
+  };
+
+  async function playSound() {
+    const { sound } = await Audio.Sound.createAsync(
+      require("./assets/click.mp3")
+    );
+    await sound.playAsync();
   }
 
-  async function playsound() {
-    const { sound } = await Audio.sound.createasync(
-      require("./assets/click.mp3")
-    )
-    await sound.playsound();
-
- return (
-    <SafeAreaView 
-    style={[styles.container, {backgroundColor: colors[currentTime]}]}> 
-      <View 
-      style={{
-         flex: 1,
-         paddinghoriontal:15,
-         paddingTop: Platform.os === "android" && 30,
-         }}>
-
-        <Text style={styles.text}>Pomodoro</Text> 
-        <Text style={styles.text}>{time}</Text> 
-        <Header currentTime={currentTime} 
-                setCurrentTime={setCurrentTime}
-                setTime={setTime}/> 
-        <Timer time={time}/>
-        <TouchableOpacity onPress={handleStartStop} style={styles.Button}>
-        <text style={{color: 'white', fontWeight: "bold" }}> 
-        {isActive ? "STOP" : "START"}
-        </text>
-          </TouchableOpacity>       
+  return (
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors[currentTime] }]}
+    >
+      <View
+        style={{
+          flex: 1,
+          paddingHorizontal: 15,
+          paddingTop: Platform.OS == "android" && 30,
+        }}
+      >
+        <Text style={{ fontSize: 32, fontWeight: "bold", color: colors.text }}>
+          Pomodoro
+        </Text>
+        <Header
+          currentTime={currentTime}
+          setCurrentTime={setCurrentTime}
+          setTime={setTime}
+        />
+        <Timer time={time} />
+        <TouchableOpacity style={styles.button} onPress={handleStartStop}>
+          <Text style={{ color: "white", fontWeight: "bold" }}>
+            {isActive ? "STOP" : "START"}
+          </Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -73,16 +85,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  text: {
-    fontSize: 32,
-    fontWeight: "bold",
-},
-Button: {
-  alignItems: "center",
-  backgroundColor: "#333333",
-  padding: 15,
-  marginTop: 15,
-  borderRadius: 15,
-},
-
+  button: {
+    alignItems: "center",
+    backgroundColor: "#333333",
+    padding: 15,
+    borderRadius: 15,
+    marginTop: 15,
+  },
 });
