@@ -16,7 +16,7 @@ This simple application is an excellent option to manage the time of your tasks,
 # contributors
 ![Alt text](image-4.png)
 
-# --Nombres y Matriculas
+# --Names & License Plates
 
 ## -Jonathan Joel cepeda 2021-0373
 ## -Jose Daniel 2019-0974
