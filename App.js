@@ -7,8 +7,8 @@ import {
   StyleSheet,
   Platform,
 } from "react-native";
-import Header from "./src/components/Header";
-import Timer from "./src/components/Timer";
+import Header from "./src/components/header/Header";
+import Timer from "./src/components/organisms/Timer";
 import { Audio } from "expo-av";
 
 const colors = ["#F7DC6F", "#A2D9CE", "#D7BDE2"];
